@@ -273,7 +273,7 @@ export function WasteModule() {
     <div className="bg-white rounded-2xl shadow-sm p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
         <Trash2 className="w-6 h-6 text-green-600" />
-        Wywóz Odpadów – Gmina Grójec
+        Wywóz odpadów – Gmina Grójec
       </h2>
 
       <div className="flex gap-2 mb-4">
