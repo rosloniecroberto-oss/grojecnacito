@@ -225,7 +225,7 @@ export function MassModule() {
       <div className="mb-4">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
           <Church className="w-6 h-6 text-purple-600" />
-          Nabożeństwa
+          Msze i Nabożeństwa
         </h2>
         <p className="text-sm text-gray-600 mt-1 ml-8">
           Dzisiaj: {formatDate(currentTime)}

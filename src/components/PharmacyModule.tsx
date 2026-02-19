@@ -235,7 +235,7 @@ export function PharmacyModule() {
     <div className="bg-white rounded-2xl shadow-sm p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
         <Pill className="w-6 h-6 text-green-600" />
-        Apteki
+        Apteki w Grójcu
       </h2>
 
       <div className="space-y-3">

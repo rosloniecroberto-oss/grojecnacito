@@ -384,7 +384,7 @@ export function BusModule() {
       <div className="bg-white rounded-2xl shadow-sm p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <Bus className="w-6 h-6 text-blue-600" />
-          Autobusy - Dworzec Laskowa
+          Odjazdy PKS – Dworzec Laskowa
         </h2>
 
         {loading && (
