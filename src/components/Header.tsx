@@ -1,6 +1,5 @@
-import { Clock, ChevronDown, Share2 } from 'lucide-react'; // Dodano Share2
 import { useWeather, getWeatherIcon } from '../hooks/useWeather';
-import { Clock, ChevronDown } from 'lucide-react';
+import { Clock, ChevronDown, Share2 } from 'lucide-react'; // Dodano Share2
 import { useEffect, useState, useRef } from 'react';
 
 export function Header() {
