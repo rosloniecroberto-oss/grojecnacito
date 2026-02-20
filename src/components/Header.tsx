@@ -34,7 +34,7 @@ export function Header() {
       if (navigator.share) {
         await navigator.share({
           title: 'Grójec na Cito',
-          text: 'Sprawdź najnowsze informacje z Grójca i okolic!',
+          text: 'PKS (Dworzec Laskowa), dyżury aptek, wywóz odpadów i msze w jednym miejscu.',
           url: window.location.href,
         });
       } else {
