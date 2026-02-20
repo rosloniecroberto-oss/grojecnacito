@@ -74,9 +74,9 @@ export function Header() {
               className="flex items-center gap-1.5 hover:opacity-70 transition-opacity group"
             >
               <div>
-                <h1 className="text-xl font-bold text-gray-900 flex items-center gap-1">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-0.5">
                   Grójec na Cito
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
                 </h1>
                 <p className="text-xs text-gray-500 hidden sm:block">To, co dziś potrzebne</p>
               </div>
