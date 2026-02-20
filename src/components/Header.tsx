@@ -1,3 +1,4 @@
+import { Clock, ChevronDown, Share2 } from 'lucide-react'; // Dodano Share2
 import { useWeather, getWeatherIcon } from '../hooks/useWeather';
 import { Clock, ChevronDown } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
@@ -29,6 +30,22 @@ export function Header() {
     };
   }, [isMenuOpen]);
 
+ const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Grójec na Cito',
+          text: 'Sprawdź najnowsze informacje z Grójca i okolic!',
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link skopiowany do schowka!');
+      }
+    } catch (err) {
+      console.log('Anulowano udostępnianie');
+    }
+  };
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
   };
@@ -80,7 +97,17 @@ export function Header() {
               </div>
             )}
           </div>
+          
+          {/* PRZYCISK UDOSTĘPNIANIA - WSTAWIAMY TUTAJ */}
+          <button 
+            onClick={handleShare}
+            className="flex items-center justify-center p-2 rounded-full text-blue-600 hover:bg-blue-50 transition-colors ml-auto sm:ml-0"
+            aria-label="Udostępnij"
+          >
+            <Share2 className="w-5 h-5" />
+          </button>
 
+          {/* POCZĄTEK BLOKU CZASU I POGODY */}          
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <div className="flex items-center gap-1.5 text-gray-700">
               <Clock className="w-4 h-4" />
