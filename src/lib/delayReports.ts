@@ -84,8 +84,7 @@ export async function submitDelayReport(scheduleId: string): Promise<{
 
   const reportData = {
     bus_schedule_id: scheduleId,
-    device_fingerprint: deviceFingerprint,
-    reported_at: new Date().toISOString()
+    device_fingerprint: deviceFingerprint
   };
 
   console.log('📤 Wysyłanie danych:', reportData);
