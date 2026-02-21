@@ -40,7 +40,7 @@ export function BusModule() {
     const cleanupTimer = setInterval(() => {
       cleanupOldReports();
       loadSchedules();
-    }, 5 * 60 * 1000);
+    }, 1 * 60 * 1000);
 
     return () => {
       clearInterval(timer);
