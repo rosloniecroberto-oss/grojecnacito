@@ -32,6 +32,12 @@ export async function canReportDelay(scheduleId: string): Promise<{
   const deviceFingerprint = generateDeviceFingerprint();
   const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
 
+  console.log('🔍 Sprawdzanie uprawnień do zgłoszenia:', {
+    scheduleId,
+    deviceFingerprint,
+    fifteenMinutesAgo
+  });
+
   const { data, error } = await supabase
     .from('bus_delay_reports')
     .select('*')
@@ -41,17 +47,19 @@ export async function canReportDelay(scheduleId: string): Promise<{
     .maybeSingle();
 
   if (error) {
-    console.error('Error checking report eligibility:', error);
+    console.error('❌ Błąd sprawdzania uprawnień:', error);
     return { canReport: true };
   }
 
   if (data) {
+    console.log('⏱️ Znaleziono niedawne zgłoszenie:', data);
     return {
       canReport: false,
       reason: 'Już zgłosiłeś opóźnienie dla tego kursu w ciągu ostatnich 15 minut'
     };
   }
 
+  console.log('✅ Można zgłosić opóźnienie');
   return { canReport: true };
 }
 
@@ -59,9 +67,12 @@ export async function submitDelayReport(scheduleId: string): Promise<{
   success: boolean;
   message: string;
 }> {
+  console.log('🚌 Zgłaszanie opóźnienia dla autobusu:', scheduleId);
+
   const eligibility = await canReportDelay(scheduleId);
 
   if (!eligibility.canReport) {
+    console.log('❌ Nie można zgłosić:', eligibility.reason);
     return {
       success: false,
       message: eligibility.reason || 'Nie można zgłosić opóźnienia'
@@ -69,23 +80,33 @@ export async function submitDelayReport(scheduleId: string): Promise<{
   }
 
   const deviceFingerprint = generateDeviceFingerprint();
+  console.log('📱 Device fingerprint:', deviceFingerprint);
 
-  const { error } = await supabase
+  const reportData = {
+    bus_schedule_id: scheduleId,
+    device_fingerprint: deviceFingerprint,
+    reported_at: new Date().toISOString()
+  };
+
+  console.log('📤 Wysyłanie danych:', reportData);
+
+  const { data, error } = await supabase
     .from('bus_delay_reports')
-    .insert({
-      bus_schedule_id: scheduleId,
-      device_fingerprint: deviceFingerprint,
-      reported_at: new Date().toISOString()
-    });
+    .insert(reportData)
+    .select();
 
   if (error) {
-    console.error('Error submitting delay report:', error);
+    console.error('❌ Błąd Supabase:', error);
+    console.error('Kod błędu:', error.code);
+    console.error('Szczegóły:', error.details);
+    console.error('Wiadomość:', error.message);
     return {
       success: false,
-      message: 'Wystąpił błąd podczas zgłaszania opóźnienia'
+      message: `Błąd: ${error.message}`
     };
   }
 
+  console.log('✅ Zgłoszenie dodane:', data);
   return {
     success: true,
     message: 'Dziękujemy! Twoje zgłoszenie pomaga innym pasażerom.'
