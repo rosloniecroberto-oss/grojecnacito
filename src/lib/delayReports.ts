@@ -22,7 +22,12 @@ export function generateDeviceFingerprint(): string {
     hash = hash & hash;
   }
 
-  return `fp_${Math.abs(hash).toString(36)}`;
+  // Ensure minimum 10 characters by padding with timestamp
+  const hashStr = Math.abs(hash).toString(36);
+  const timestamp = Date.now().toString(36);
+  const combined = `${hashStr}_${timestamp}`;
+
+  return `fp_${combined}`;
 }
 
 export async function canReportDelay(scheduleId: string): Promise<{

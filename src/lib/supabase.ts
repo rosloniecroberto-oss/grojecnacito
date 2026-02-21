@@ -12,7 +12,13 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     schema: 'public'
   },
   auth: {
-    persistSession: true,
-    autoRefreshToken: true
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false
+  },
+  global: {
+    headers: {
+      'apikey': supabaseAnonKey
+    }
   }
 });
