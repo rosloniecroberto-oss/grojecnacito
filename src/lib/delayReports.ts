@@ -37,12 +37,6 @@ export async function canReportDelay(scheduleId: string): Promise<{
   const deviceFingerprint = generateDeviceFingerprint();
   const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
 
-  console.log('🔍 Sprawdzanie uprawnień do zgłoszenia:', {
-    scheduleId,
-    deviceFingerprint,
-    fifteenMinutesAgo
-  });
-
   const { data, error } = await supabase
     .from('bus_delay_reports')
     .select('*')
@@ -52,19 +46,16 @@ export async function canReportDelay(scheduleId: string): Promise<{
     .maybeSingle();
 
   if (error) {
-    console.error('❌ Błąd sprawdzania uprawnień:', error);
     return { canReport: true };
   }
 
   if (data) {
-    console.log('⏱️ Znaleziono niedawne zgłoszenie:', data);
     return {
       canReport: false,
       reason: 'Już zgłosiłeś opóźnienie dla tego kursu w ciągu ostatnich 15 minut'
     };
   }
 
-  console.log('✅ Można zgłosić opóźnienie');
   return { canReport: true };
 }
 
@@ -72,12 +63,9 @@ export async function submitDelayReport(scheduleId: string): Promise<{
   success: boolean;
   message: string;
 }> {
-  console.log('🚌 Zgłaszanie opóźnienia dla autobusu:', scheduleId);
-
   const eligibility = await canReportDelay(scheduleId);
 
   if (!eligibility.canReport) {
-    console.log('❌ Nie można zgłosić:', eligibility.reason);
     return {
       success: false,
       message: eligibility.reason || 'Nie można zgłosić opóźnienia'
@@ -85,32 +73,24 @@ export async function submitDelayReport(scheduleId: string): Promise<{
   }
 
   const deviceFingerprint = generateDeviceFingerprint();
-  console.log('📱 Device fingerprint:', deviceFingerprint);
 
   const reportData = {
     bus_schedule_id: scheduleId,
     device_fingerprint: deviceFingerprint
   };
 
-  console.log('📤 Wysyłanie danych:', reportData);
-
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('bus_delay_reports')
     .insert(reportData)
     .select();
 
   if (error) {
-    console.error('❌ Błąd Supabase:', error);
-    console.error('Kod błędu:', error.code);
-    console.error('Szczegóły:', error.details);
-    console.error('Wiadomość:', error.message);
     return {
       success: false,
-      message: `Błąd: ${error.message}`
+      message: 'Nie udało się zgłosić opóźnienia. Spróbuj ponownie.'
     };
   }
 
-  console.log('✅ Zgłoszenie dodane:', data);
   return {
     success: true,
     message: 'Dziękujemy! Twoje zgłoszenie pomaga innym pasażerom.'
@@ -120,13 +100,12 @@ export async function submitDelayReport(scheduleId: string): Promise<{
 export async function getDelayReportsCount(scheduleId: string): Promise<number> {
   await cleanupOldReports();
 
-  const { data, error, count } = await supabase
+  const { error, count } = await supabase
     .from('bus_delay_reports')
     .select('*', { count: 'exact', head: false })
     .eq('bus_schedule_id', scheduleId);
 
   if (error) {
-    console.error('Error getting delay reports count:', error);
     return 0;
   }
 
