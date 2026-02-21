@@ -31,6 +31,7 @@ export function BusModule() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    setLoading(true);
     cleanupOldReports();
     scheduleMidnightCleanup();
     loadSchedules();
@@ -50,8 +51,6 @@ export function BusModule() {
 
   async function loadSchedules() {
     // WYMUŚ CAŁKOWITE WYCZYSZCZENIE STANU
-    setSchedules([]);
-    setLoading(true);
 
     try {
       const { data: schedulesData, error: schedulesError } = await supabase
